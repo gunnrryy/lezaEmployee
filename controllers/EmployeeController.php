@@ -67,18 +67,14 @@ class EmployeeController extends Controller
         $model = new Employees();
         $upload = new UploadForm;
         if (Yii::$app->request->isPost) {
-            $upload->imageFile = \yii\web\UploadedFile::getInstance($upload, 'imageFile');
-            if ($upload->upload()) {
+            if (!empty($_FILES['UploadForm']['type']['imageFile'])) {
+                $upload->imageFile = \yii\web\UploadedFile::getInstance($upload, 'imageFile');
+                $upload->upload();
                 $model->photo = $upload->imageFile->name;
-                if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                    return $this->redirect(['view', 'id' => $model->id]);
-                } else {
-                    return $this->render('create', [
-                        'model' => $model,
-                        'upload' => $upload
-                    ]);
-                }
             }
+        }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -98,6 +94,13 @@ class EmployeeController extends Controller
         $model = $this->findModel($id);
         $upload = new UploadForm;
         
+        if (Yii::$app->request->isPost) {
+            if (!empty($_FILES['UploadForm']['type']['imageFile'])) {
+                $upload->imageFile = \yii\web\UploadedFile::getInstance($upload, 'imageFile');
+                $upload->upload();
+                $model->photo = $upload->imageFile->name;
+            }
+        }
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
