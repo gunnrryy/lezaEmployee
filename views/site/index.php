@@ -37,7 +37,7 @@ $this->title = 'Yash Khuthia';
 
                 <p>Reporting section is here.</p>
 
-                <p><a class="btn btn-default" href="<?= Url::to("reports") ?>">Reports &raquo;</a></p>
+                <p><a class="btn btn-default" href="<?= Url::to("salary/report") ?>">Reports &raquo;</a></p>
             </div>
         </div>
 

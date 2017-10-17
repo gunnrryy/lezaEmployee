@@ -8,6 +8,7 @@ use app\models\EmployeeSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\UploadForm;
 
 /**
  * EmployeeController implements the CRUD actions for Employees model.
@@ -64,12 +65,24 @@ class EmployeeController extends Controller
     public function actionCreate()
     {
         $model = new Employees();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save(false)) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $upload = new UploadForm;
+        if (Yii::$app->request->isPost) {
+            $upload->imageFile = \yii\web\UploadedFile::getInstance($upload, 'imageFile');
+            if ($upload->upload()) {
+                $model->photo = $upload->imageFile->name;
+                if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                } else {
+                    return $this->render('create', [
+                        'model' => $model,
+                        'upload' => $upload
+                    ]);
+                }
+            }
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'upload' => $upload
             ]);
         }
     }
@@ -83,12 +96,14 @@ class EmployeeController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $upload = new UploadForm;
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'upload' => $upload
             ]);
         }
     }

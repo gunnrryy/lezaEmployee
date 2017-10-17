@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use fedemotta\datatables\DataTables;
+use kartik\grid\GridView;
 //use yii\grid\GridView;
 use yii\widgets\Pjax;
 
@@ -9,7 +9,7 @@ use yii\widgets\Pjax;
 /* @var $searchModel app\models\SalarySearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Salaries';
+$this->title = 'Salary Report';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="salaries-index">
@@ -17,53 +17,34 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 <?php // echo $this->render('_search', ['model' => $searchModel]);  ?>
 
-    <p>
-    <?= Html::a('Create Salaries', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
     <?php echo $this->render('_search', ['searchModel' => $searchModel]); ?>
     
     <?php Pjax::begin(); ?>    
     <?=
-    DataTables::widget([
+    GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+        'autoXlFormat'=>true,
+        'export'=>[
+            'fontAwesome'=>true,
+            'showConfirmAlert'=>false,
+            'target'=>GridView::TARGET_BLANK
+        ],
+//        'filterModel' => $searchModel,
         'columns' => [
                 ['class' => 'yii\grid\SerialColumn'],
-            'id',
-            'employee_id',
+            'employee.name',
             'salary',
             'salary_date',
             'variation_type',
-            // 'remarks',
-            // 'added_on',
-            // 'updated_on',
-            ['class' => 'yii\grid\ActionColumn'],
-            'clientOptions' => [
-                "lengthMenu" => [[20, -1], [20, Yii::t('app', "All")]],
-                "info" => false,
-                "responsive" => true,
-                "dom" => 'lfTrtip',
-                "tableTools" => [
-                    "aButtons" => [
-                            [
-                            "sExtends" => "copy",
-                            "sButtonText" => Yii::t('app', "Copy to clipboard")
-                        ], [
-                            "sExtends" => "csv",
-                            "sButtonText" => Yii::t('app', "Save to CSV")
-                        ], [
-                            "sExtends" => "xls",
-                            "oSelectorOpts" => ["page" => 'current']
-                        ], [
-                            "sExtends" => "pdf",
-                            "sButtonText" => Yii::t('app', "Save to PDF")
-                        ], [
-                            "sExtends" => "print",
-                            "sButtonText" => Yii::t('app', "Print")
-                        ],
-                    ]
-                ]
-            ],
+            'remarks',
+        ],
+        'pjax'=>true,
+        'pjaxSettings'=>[
+            'neverTimeout'=>true,
+        ],
+         'panel'=>[
+            'type'=>'primary',
+             'after'=>Html::a('<i class="glyphicon glyphicon-repeat"></i> Reset', ['report'], ['class' => 'btn btn-info']),
         ],
     ]);
     ?>

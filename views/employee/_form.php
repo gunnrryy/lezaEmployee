@@ -11,7 +11,7 @@ use kartik\date\DatePicker;
 
 <div class="employees-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
@@ -42,7 +42,7 @@ use kartik\date\DatePicker;
 
     <?= $form->field($model, 'salary')->textInput() ?>
 
-    <?= $form->field($model, 'photo')->textInput(['maxlength' => true]) ?>
+     <?= $form->field($upload, 'imageFile')->fileInput() ?>
 
     <?= $form->field($model, 'is_active')->textInput() ?>
 

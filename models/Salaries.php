@@ -34,7 +34,7 @@ class Salaries extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['employee_id', 'salary', 'salary_date', 'variation_type', 'remarks'], 'required'],
+            [['employee_id', 'salary', 'salary_date'], 'required'],
             [['employee_id'], 'integer'],
             [['salary'], 'number'],
             [['salary_date', 'added_on', 'updated_on'], 'safe'],
